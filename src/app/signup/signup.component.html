@@ -1,0 +1,55 @@
+<div *ngIf="!isLogin">
+<div class="container">
+    <div class="content">
+        <h1>Sign up</h1>
+        <form>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" [(ngModel)]="username">
+            <div *ngIf="errorInvalidUserName" class="alert alert-danger">
+                Username already exist.
+              </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password">
+            <div *ngIf="errorInvalidPassword" class="alert alert-danger">
+                Password more than 8 character.Contain UpperCase, 
+                special character and number
+              </div>
+        </div>
+        <div class="form-group">
+            <label for="phonenumber">Phone number</label>
+            <input type="text" class="form-control" id="phonenumber" name="phonenumber" [(ngModel)]="phonenumber">
+            <div *ngIf="errorInvalidPhoneNumber" class="alert alert-danger">
+                Invalid phone number
+              </div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="email" [(ngModel)]="email">
+            <div *ngIf="errorInvalidEmail" class="alert alert-danger">
+                Invalid email.
+              </div>
+        </div>
+
+        
+        <button class="btn btn-primary" (click)="onSignup()">Signup</button>
+        <a routerLink="/login" style="margin-left: 60px;"> I already have an account</a>
+        <a routerLink="/management">Go to management page</a>
+        <div *ngIf="errorInvalidValue" class="alert alert-danger">
+            Please fill out the form.
+          </div>
+          <div *ngIf="signUpSuccess" class="has-succses">
+            Congrat.
+          </div>
+        </form>
+    </div>
+</div>
+</div>
+<div *ngIf="isLogin">
+  <h1>Already login</h1>
+  <button (click)="onLogout()">Logout</button>
+</div>
+        

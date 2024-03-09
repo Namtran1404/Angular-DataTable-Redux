@@ -1,0 +1,48 @@
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+  input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+input[type=password]{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Chiều cao 100% của viewport */
+  }
+  
+  .content {
+    width: 300px; /* Độ rộng của nội dung */
+  }
+  /* Kích thước màn hình lớn hơn 768px (Tablet) */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 768px; /* Điều chỉnh chiều rộng tối đa */
+  }
+}
+
+/* Kích thước màn hình lớn hơn 576px (Smartphone) */
+@media screen and (max-width: 576px) {
+  .content {
+    width: 100%; /* Điều chỉnh độ rộng của nội dung */
+  }
+}

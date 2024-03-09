@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="content">
+    <h2 style="text-align:center">User Profile</h2>
+    <div *ngIf="this.loggedUser" class="card">
+      <p>Username: {{this.loggedUser.username}}</p>
+      <p>Email: {{this.loggedUser.email}}</p>
+      <p>password: {{this.loggedUser.phonenumber}}</p>
+      <button (click)="onLogout()">logout</button>
+    </div>
+  </div>
+</div>

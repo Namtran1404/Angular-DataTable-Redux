@@ -1,0 +1,24 @@
+<h1>User management</h1>
+<!-- <input type="text" placeholder="Search" style="max-width: 200px; margin-right: 20px;">
+<button class="button-30">Search</button> -->
+<button class="button-30" (click)="openAddUserModal()">Add user </button>
+<table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  id="users" class="row-border hover" >  
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phonenumber }}</td>
+        <td><button class="button-61" style="background-color: crimson;" mat-button (click)="openDialog(user.id,user.username)">Delete</button><button class="button-61" >fix</button></td>
+      </tr>
+    </tbody>
+  </table>

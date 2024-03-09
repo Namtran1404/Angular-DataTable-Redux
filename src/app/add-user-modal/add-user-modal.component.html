@@ -1,0 +1,40 @@
+<div class="modal-overplay">
+<div class="modal-container">
+<h2>{{ data.title }}</h2>
+<form>
+    <div>
+  <!-- Các trường dữ liệu để nhập thông tin người dùng mới -->
+    <div class="form-group">
+        <input type="text" [(ngModel)]="userData.username" placeholder="User name" name="username" />
+        <div *ngIf="!isUserNameValid" class="alert alert-danger">
+            Username already exist.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="password" [(ngModel)]="userData.password" placeholder="Password" name="password"/>
+        <div *ngIf="!isPasswordValid" class="alert alert-danger">
+            Password must contain more than 8 character, UpperCase, 
+            special character and number
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="text" [(ngModel)]="userData.email" placeholder="Email" name="email"/>
+        <div *ngIf="!isEmailValid" class="alert alert-danger">
+            Invalid email.
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="text" [(ngModel)]="userData.phonenumber" placeholder="Phone number" name="phonenumber" />
+        <div *ngIf="!isPhoneNumberValid" class="alert alert-danger">
+            Invalid phone number
+        </div>
+    </div>
+
+  <!-- Các nút xử lý -->
+  <button class="button-30" (click)="onAddUser(userData)">Add</button>
+  <button class="button-30" (click)="onCancel()">Cancel</button>
+</div>
+</form>
+</div>
+</div>
