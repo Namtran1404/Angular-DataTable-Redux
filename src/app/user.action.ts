@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { User } from './user.model';
 
 export const login = createAction(
   '[User] Login',
@@ -15,3 +16,7 @@ export const deleteUser = createAction(
   '[User] Delete User', 
   props<{ userId: number }>()
   );
+  export const updateUser = createAction(
+    '[User] Update User', 
+    props<{ updateUser: User }>()
+    );

@@ -35,13 +35,13 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/datatables.net-dt/css/jquery.dataTables.css",
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css",
-              "node_modules/datatables.net-dt/css/jquery.dataTables.css"
+              "src/styles.css"
+              
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
-              
               "node_modules/datatables.net/js/dataTables.js"
             ],
             "server": "src/main.server.ts",

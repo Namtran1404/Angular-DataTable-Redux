@@ -1,7 +1,8 @@
 <h1>User management</h1>
 <!-- <input type="text" placeholder="Search" style="max-width: 200px; margin-right: 20px;">
 <button class="button-30">Search</button> -->
-<button class="button-30" (click)="openAddUserModal()">Add user </button>
+<!-- <button class="button-30" (click)="openAddUserModal()">Add user </button> -->
+
 <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  id="users" class="row-border hover" >  
     <thead>
       <tr>
@@ -18,7 +19,9 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.phonenumber }}</td>
-        <td><button class="button-61" style="background-color: crimson;" mat-button (click)="openDialog(user.id,user.username)">Delete</button><button class="button-61" >fix</button></td>
+        <td><button class="button-61" style="background-color: crimson;" mat-button (click)="openDialog(user)">Delete</button><button class="button-61"(click)="openUserModal('update',user)">fix</button></td>
       </tr>
     </tbody>
   </table>
+  <button class="button-30"(click)="openUserModal('add')">Add more user</button>
+<button class="button-30"(click)="navigateToLogin()">Login</button>

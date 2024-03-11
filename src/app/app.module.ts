@@ -16,7 +16,6 @@ import { DeletemodalComponent } from './deletemodal/deletemodal.component';
 import { MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
 import { DataTablesModule } from 'angular-datatables';
-import { UpdateUserModalComponent } from './update-user-modal/update-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +26,6 @@ import { UpdateUserModalComponent } from './update-user-modal/update-user-modal.
     ManagementComponent,
     DeletemodalComponent,
     AddUserModalComponent,
-    UpdateUserModalComponent
   ],
   imports: [
     BrowserModule,

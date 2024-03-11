@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { deleteUser, login, logout, signup } from './user.action';
+import { deleteUser, login, logout, signup, updateUser } from './user.action';
 import { User } from './user.model';
 
 export interface UserState {
@@ -53,5 +53,16 @@ export const userReducer = createReducer(
     ...state,
     users: state.users.filter(user => user.id !== userId),
   })),
+  on(updateUser, (state, { updateUser }) => {
+    return{
+      ...state,
+      users: state.users.map(user => {
+        if (user.id === updateUser.id) {
+          return { ...user, ...updateUser};
+        }
+        return user;
+      })
+    };
+  })
   
 );
