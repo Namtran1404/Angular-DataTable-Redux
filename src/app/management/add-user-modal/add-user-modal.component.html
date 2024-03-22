@@ -1,0 +1,58 @@
+<div class="modal-overplay">
+<div class="modal-container">
+    <h2 mat-dialog-title>{{ data.action === 'add' ? 'Add User' : 'Update User' }}</h2>
+<form>
+    <div>
+  <!-- Các trường dữ liệu để nhập thông tin người dùng mới -->
+        
+    <div *ngIf="data.action!=='update'" class="form-row">
+        <label for="username">Username <span *ngIf="!addUserValidate.isUsernameValid" style="color:red">invalide username</span>
+            <span *ngIf="addUserValidate.isUsernameExisted" style="color:red">Username already exist.</span>
+        </label>       
+        <input type="text" [(ngModel)]="data.userData.username" placeholder="User name" name="username" />
+    </div>
+
+    <div *ngIf="data.action!=='update'" class="form-row">
+        <label for="password">Password <span *ngIf="!addUserValidate.isPasswordValid" style="color:red"> Password must contain more than 8 character, UpperCase, 
+            special character and number</span></label>
+        <input type="password" [(ngModel)]="data.userData.password" placeholder="Password" name="password" [type]="showPassword ? 'text' : 'password'"/>
+        <input type="checkbox" (change)="togglePassword()"> Show Password
+     
+        <div class="form-group">
+            <label for="confirmpassword">Confirm Password <span *ngIf="!addUserValidate.isConfirmPasswordValid" style="color:red">invalid confirm password</span></label>
+            <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" [(ngModel)]="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'">
+            <input type="checkbox" (change)="toggleConfirmPassword()"> Show confirm Password
+           
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email <span *ngIf="!addUserValidate.isEmailValid" style="color:red">invalid email</span>
+            <span *ngIf="addUserValidate.isEmailExisted" style="color:red"> Email already existed.</span>
+        
+        </label>
+        <input type="text" [(ngModel)]="data.userData.email" placeholder="Email" name="email"/>
+    </div>
+    <div class="form-group">
+        <label for="phonenumber">Phone Number <span *ngIf="!addUserValidate.isPhoneNumberValid" style="color:red">invalide phone number</span>
+            <span *ngIf="addUserValidate.isPhoneNumberExisted" style="color:red">phonenumber already exist..</span>
+        </label>
+        <input type="text" [(ngModel)]="data.userData.phonenumber" placeholder="Phone number" name="phonenumber" />
+       
+    </div>
+    <div class="form-group">
+        <label for="role">Role</label>
+        <select [(ngModel)]="data.userData.role" name="role" [value]="data.userData.role">
+            <option value="admin" name="role">admin</option>
+            <option value="normal" name="role">normal</option>
+          </select>
+    </div>
+
+  <!-- Các nút xử lý -->
+  <!--<button class="button-30" (click)="onSubmit(userData)">Add</button>-->
+  <button class="button-30" (click)="onSubmit(data.userData)">{{ data.action === 'add' ? 'add' : 'update' }}</button>
+  <button class="button-30" (click)="onCancel()">Cancel</button>
+</div>
+</form>
+</div>
+</div>

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { User } from './user.model';
+import { User } from '../model/user.model';
 
 export const login = createAction(
   '[User] Login',
@@ -7,7 +7,7 @@ export const login = createAction(
 );
 export const signup = createAction(
     '[User] Signup',
-    props<{ username: string; password: string; email: string; phonenumber: string }>()
+    props<{ username: string; password: string; email: string; phonenumber: string ;role:string}>()
 );
 export const logout = createAction(
   '[Auth] Logout'
@@ -15,8 +15,8 @@ export const logout = createAction(
 export const deleteUser = createAction(
   '[User] Delete User', 
   props<{ userId: number }>()
-  );
-  export const updateUser = createAction(
+);
+export const updateUser = createAction(
     '[User] Update User', 
     props<{ updateUser: User }>()
-    );
+);

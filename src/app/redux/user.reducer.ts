@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { deleteUser, login, logout, signup, updateUser } from './user.action';
-import { User } from './user.model';
+import { User } from '../model/user.model';
 
 export interface UserState {
     users:User[];
@@ -34,7 +34,7 @@ export const userReducer = createReducer(
         };
     }
   }),
-  on(signup, (state, { username, password, email, phonenumber }) => {
+  on(signup, (state, { username, password, email, phonenumber,role }) => {
     const id = state.users.length + 1;
     const newUser: User = {
       id,
@@ -42,6 +42,7 @@ export const userReducer = createReducer(
       password,
       email,
       phonenumber,
+      role
     };
     return {
       ...state,

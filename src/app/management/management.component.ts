@@ -1,15 +1,16 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, input } from '@angular/core';
-import { User } from '../user.model';
-import { UserState } from '../user.reducer';
+import { User } from '../model/user.model';
+import { UserState } from '../redux/user.reducer';
 import { Store, select, union } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { selectUserList } from '../user.selector';
 import { MatDialog } from '@angular/material/dialog';
-import { DeletemodalComponent } from '../deletemodal/deletemodal.component';
-import { deleteUser, signup, updateUser } from '../user.action';
-import { AddUserModalComponent } from '../add-user-modal/add-user-modal.component';
-import { Subject } from 'rxjs';
-import { DataTableDirective } from 'angular-datatables';
+import { DeletemodalComponent } from './deletemodal/deletemodal.component';
+import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
+import { throwError } from 'rxjs';
+import { APIService } from '../service/api.service';
+import { AuthService } from '../service/auth.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { ManagementPageSetting } from './management.page.setting';
 
 @Component({
   selector: 'app-management',
@@ -18,149 +19,77 @@ import { DataTableDirective } from 'angular-datatables';
 })
 export class ManagementComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  @ViewChild(DataTableDirective, {static: false})
-  dtElement: DataTableDirective;
-
-  dtOptions: DataTables.Settings = {};
-
-
-  dtTrigger: Subject<any> = new Subject<any>();
+  pageSetting:ManagementPageSetting;
+  currentUserRole: string;
+  currentUserName:string;
   users: User[] = [];
-  userId:number;
-
-
-  constructor(private store: Store<UserState>,private router:Router,public dialog: MatDialog){}
-  openDialog(userToDelete:User): void {
+  constructor(private store: Store<UserState>, private router: Router, public dialog: MatDialog, public apiService: APIService, public authService: AuthService) {
+    
+    this.pageSetting=new ManagementPageSetting([1,2,3,4,5],5);
+    const token=this.apiService.getTokenFromSessionStorage();
+    //decodeToken lấy thông tin người dùng.
+    if(token){
+      const helper=new JwtHelperService();
+      const decodedToken = helper.decodeToken(token);
+      this.currentUserRole=decodedToken.role;
+      console.log('current role = ',this.currentUserRole);
+      this.currentUserName=decodedToken.username;
+    }
+    
+  }
+  ngOnInit() {
+    this.getUsersData();
+    
+  }
+  ngAfterViewInit(): void {}
+  ngOnDestroy(): void {}
+  getUsersData() {
+     this.apiService.getUsersAPI().subscribe(
+      (response) => {
+        const usertemp: User[] = JSON.parse(JSON.stringify(response));
+        this.users = usertemp;
+        this.pageSetting.totalPages = Math.ceil(this.users.length / this.pageSetting.pageSize);
+      },
+      (error) => {
+        if (error.status === 401 || error.status === 403) {
+          console.error('Unauthorized access. Token might be invalid');
+          this.authService.logout();
+          this.router.navigate(['/auth/login']); 
+        } else {}
+        return throwError(error); 
+      });
+  }
+  openDeleteDiaglog(userToDelete: User): void {
     const dialogRef = this.dialog.open(DeletemodalComponent, {
       width: '250px',
-      data: { title: 'Confirm Deletion', content: userToDelete}
+      data: { title: 'Confirm Deletion', content: userToDelete }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async result => {
       if (result) {
-        // Thực hiện hành động xóa người dùng ở đây
-        console.log('User deleted id='+userToDelete.id);
-        this.store.dispatch(deleteUser({ userId:userToDelete.id }));
-        this.rerender();
-        console.log(this.users.length+" User left");
-      } else {
+        this.getUsersData();
+      }
+      else {
         console.log('User deletion cancelled');
       }
     });
   }
-  openUserModal(action: string, userData?: any): void {
+  openUserDialog(action: string, userData?: any): void {
     const dialogRef = this.dialog.open(AddUserModalComponent, {
       data: { action: action, userData: userData }
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed().subscribe(async result => {
       // Xử lý kết quả khi modal đóng
-      if(result!==undefined){
-          if(action==='add'){
-            console.log('User added:', result.username);
-            this.store.dispatch(
-              signup({
-                username: result.username,
-                password: result.password,
-                email: result.email,
-                phonenumber: result.phonenumber,
-              })
-              
-            ); this.rerender(); 
-          }
-          else{
-            console.log(result.id);
-            console.log(result.username);
-            console.log(result.password);
-            console.log(result.email);
-            console.log(result.phonenumber);
-            this.store.dispatch(updateUser({updateUser:result}));
-            this.rerender();
-          }
-      }
-    });
-  }
-  openAddUserModal(): void {
-    const dialogRef = this.dialog.open(AddUserModalComponent, {
-      width: '500px',
-      data: { title: 'Add User', content: 'Add a new user' }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Thực hiện hành động thêm người dùng ở đây
-        console.log('User added:', result.username);
-        this.store.dispatch(
-          signup({
-            username: result.username,
-            password: result.password,
-            email: result.email,
-            phonenumber: result.phonenumber,
-          })
-          
-        ); this.rerender(); 
-
-        
-      } else {
-        console.log('User addition cancelled');
+        this.getUsersData();
+      }
+      else{
+        this.getUsersData();   
       }
     });
   }
-  ngOnInit() {
-    this.dtOptions = {
-    //deferRender: true, only need with big data set
-      pagingType: 'full_numbers',
-      pageLength: 5,
-      lengthMenu: [5, 10, 15,20],
-      
-    };
-    
-    this.generateUserRedux();
-    this.getUsers();
-  }
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(this.dtOptions);
-  }
 
-  ngOnDestroy(): void {
-    // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
-  }
-
-  rerender(): void {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // Destroy the table first
-      dtInstance.destroy();
-      // Call the dtTrigger to rerender again
-      this.dtTrigger.next(this.dtOptions);
-    });
-    
-  }
-  
-  
-  generateUserRedux(){
-      for (let i = 1; i <= 99; i++) {
-        const user: User = {
-          id: i,
-          username: `User${i}`,
-          email: `user${i}@gmail.com`,
-          phonenumber: `091234567${i}`,
-          password: 'User@123456'
-        };
-        this.store.dispatch(signup({username: user.username,
-          password: user.password,
-          email: user.email,
-          phonenumber: user.phonenumber,}))
-      }
-    
-  }
-
-  getUsers(){
-      this.store.pipe(select(selectUserList)).subscribe((users:any)=>{
-        this.users=users;
-      });
-  }
-  navigateToLogin(){
-    this.router.navigate(['login']);
-  }
+  navigateToLogin() {this.router.navigate(['/auth/login']);}
+  logout() {this.authService.logout();this.router.navigate(['/auth/login']);}
 }

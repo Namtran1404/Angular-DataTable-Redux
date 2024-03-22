@@ -1,27 +1,45 @@
+
 <h1>User management</h1>
 <!-- <input type="text" placeholder="Search" style="max-width: 200px; margin-right: 20px;">
 <button class="button-30">Search</button> -->
 <!-- <button class="button-30" (click)="openAddUserModal()">Add user </button> -->
-
-<table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  id="users" class="row-border hover" >  
+<select [(ngModel)]="pageSetting.pageSize" (change)="pageSetting.updateTotalPages(this.currentUserName,users)">
+  <option *ngFor="let length of pageSetting.pageLength" [value]="length">
+    {{ length }} items per page
+  </option>
+</select>
+<label>Search info</label>
+<input type="text" [(ngModel)]="pageSetting.searchText">
+<table id="users" class="row-border hover" >  
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Action</th>
+        <th (click)="pageSetting.sortByNumber('id',users)">ID</th>
+        <th (click)="pageSetting.sortByString('username',users)">Username</th>
+        <th (click)="pageSetting.sortByString('email',users)">Email</th>
+        <th (click)="pageSetting.sortByString('phonenumber',users)">Phone Number</th>
+        <th *ngIf="currentUserRole==='admin'">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.phonenumber }}</td>
-        <td><button class="button-61" style="background-color: crimson;" mat-button (click)="openDialog(user)">Delete</button><button class="button-61"(click)="openUserModal('update',user)">fix</button></td>
+      <tr  *ngFor="let user of pageSetting.getPageData(currentUserName,users) " >
+          <td >{{ user.id }}</td>
+          <td >{{ user.username }}</td>
+          <td >{{ user.email }}</td>
+          <td >{{ user.phonenumber }}</td>
+          <td *ngIf="currentUserRole==='admin'">
+            <button class="button-61" style="background-color: crimson;" mat-button (click)="openDeleteDiaglog(user)">Delete</button>
+            <button class="button-61"(click)="openUserDialog('update',user)">fix</button>
+          </td>
+        
+      
       </tr>
     </tbody>
   </table>
-  <button class="button-30"(click)="openUserModal('add')">Add more user</button>
-<button class="button-30"(click)="navigateToLogin()">Login</button>
+  <div class="pagnition">
+      <button class="button-30" style="height: 30px; font-size: small;"  (click)="pageSetting.goToPreviousPage()">Previous</button>
+    <span style="font-size: medium;">Page {{ pageSetting.currentPage }} of {{ pageSetting.totalPages }}</span>
+    <button  class="button-30" style="height: 30px; font-size: small;" (click)="pageSetting.goToNextPage()">Next</button>
+</div>
+<br/>
+<button class="button-30"(click)="openUserDialog('add')">Add more user</button>
+<button class="button-30"(click)="logout()">Logout</button>
